@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from models import db, Task, User
+import bleach
 
 task_bp = Blueprint('task_bp', __name__)
 
@@ -10,6 +11,7 @@ def dashboard():
         return redirect(url_for('auth_bp.login'))
 
     search_query = request.args.get('search', '')
+    search_query = bleach.clean(search_query)
 
     # Vulnerable to SQL Injection (intentionally insecure)
     if search_query:

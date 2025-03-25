@@ -12,9 +12,9 @@ def login():
 
         # Vulnerable to SQL Injection due to string formatting
         # Intentionally insecure: Using raw string formatting instead of parameterized queries
-        user = User.query.filter_by(username=username, password=password).first()
+        user = User.query.filter_by(username=username).first()
 
-        if user:
+        if user and user.verify_password(password):
             session['user_id'] = user.id
             session['username'] = user.username
             session['is_admin'] = user.is_admin
@@ -39,7 +39,8 @@ def register():
             flash('Username already exists!')
             return redirect(url_for('auth_bp.register'))
 
-        new_user = User(username=username, password=password)
+        new_user = User(username=username)
+        new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
 
