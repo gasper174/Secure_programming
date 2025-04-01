@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from dotenv import load_dotenv
 import os
 from models import db, User, Task
 from routes.auth_routes import auth_bp
@@ -9,7 +10,7 @@ from routes.admin_routes import admin_bp
 app = Flask(__name__)
 
 # Hardcoded secret key (intentionally insecure)
-app.secret_key = "super_secret_key_do_not_share"
+app.secret_key = os.environ.get('flask_secret_key')
 app.config['DEBUG'] = True  # Debug mode enabled (intentionally insecure)
 
 # Configure SQLite database
@@ -47,4 +48,4 @@ def create_tables():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)  # Debug mode enabled (intentionally insecure)
+    app.run(debug=False)  # Debug mode enabled (intentionally insecure)
